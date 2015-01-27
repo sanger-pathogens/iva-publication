@@ -67,13 +67,13 @@ To make all plots (except Figure 1, which is described above)
 and regenerate the QC summary files, run
 
     ./Scripts/gather_results.py Assemblies/ plot
-    mv plot.hiv.tsv Data/qc_summary.hiv.tsv
-    mv plot.flu.tsv Data/qc_summary.flu.tsv
+    mv plot.flu.tsv Data/table.S5.qc_summary.flu.tsv
+    mv plot.hiv.tsv Data/table.S6.qc_summary.hiv.tsv
 
 To make the plots of CPU and RAM usage, run
 
     cd Data
-    ../Scripts/make_resources_plots.R resources.flu.tsv resources.hiv.tsv resources
+    ../Scripts/make_resources_plots.R table.S7.resources_flu.tsv table.S8.resources_hiv.tsv resources
 
 This script outputs the rows of the outliers that were removed from the
 box plots of wall clock and total CPU time, then makes the plots.
