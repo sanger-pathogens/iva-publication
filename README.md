@@ -6,7 +6,9 @@ intermediate data necessary to reproduce the results of
 the IVA manuscript (submitted).
 
 For all of the scripts in this repository to work, you will
-need IVA (and its dependencies) installed. This README
+need IVA (and its dependencies) installed, and also
+the Python package [Fastaq] [fastaq] installed.
+This README
 assumes that the reader has read the publication and supplementary
 material.
 
@@ -20,7 +22,7 @@ Assemblies
 The `Assemblies/` directory contains two directories:
 `HIV/` and `Flu/`, each of which contains one
 directory per sample. Each sample directory has a
-directory for each of the assemblers IVA, IVA.c10r4,
+directory for each of the assemblers IVA, IVA.c5r2,
 PRICE, Trinity, Inchworm, VICUNA.80 and VICUNA.90.
 
 The files within each assembly directory are:
@@ -78,3 +80,5 @@ box plots of wall clock and total CPU time, then makes the plots.
 
 The usage of the remaining scripts is described in the supplementary material.
 
+
+  [fastaq]: https://github.com/sanger-pathogens/Fastaq
