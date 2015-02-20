@@ -4,7 +4,7 @@
 
 import os
 import math
-import fastaq
+import pyfastaq
 import iva
 
 
@@ -30,9 +30,9 @@ class Coords:
 
 
 def nucmer_to_coords(refname, filename):
-    f = fastaq.utils.open_file_read(filename)
+    f = pyfastaq.utils.open_file_read(filename)
     lines = f.readlines()
-    fastaq.utils.close(f)
+    pyfastaq.utils.close(f)
     i = 0
     while not lines[i].startswith('[S1]'):
         i += 1
@@ -72,7 +72,7 @@ def coords_to_plot_positions(coords):
 
 
 def load_cov_plot(filename, refname):
-    lines = fastaq.utils.syscall_get_stdout('tabix ' + filename + ' ' + refname)
+    lines = pyfastaq.utils.syscall_get_stdout('tabix ' + filename + ' ' + refname)
     read_depth = []
     snps = []
     for line in lines:
@@ -142,7 +142,7 @@ coords['Trinity'] = nucmer_to_coords(iva_contig_name, trinity_coords_file)
 
 
 iva_lengths = {}
-fastaq.tasks.lengths_from_fai(iva_fa + '.fai', iva_lengths)
+pyfastaq.tasks.lengths_from_fai(iva_fa + '.fai', iva_lengths)
 contig_height = 2
 contig_space = 2
 assembly_space = 4
@@ -155,7 +155,7 @@ height = total_contig_height + plot_height * 2 + plot_space * 2 * gap_iva_to_axi
 axis_thickness = 0.5
 
 
-f = fastaq.utils.open_file_write(outprefix + '.svg')
+f = pyfastaq.utils.open_file_write(outprefix + '.svg')
 total_width = 520
 plotting_width = 450
 plot_x_start = total_width - plotting_width
@@ -233,7 +233,7 @@ print(svg_text(plot_x_start - 15, h - plot_height, "1", size=10), file=f)  # tic
 print(svg_text(10, h, "% read differences", size=12, vertical=True), file=f)
 
 print('</svg>', file=f)
-fastaq.utils.close(f)
+pyfastaq.utils.close(f)
 
 
 os.unlink(outprefix + '.price.coords')

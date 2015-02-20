@@ -5,7 +5,7 @@ import os
 import copy
 import math
 import argparse
-import fastaq
+import pyfastaq
 import iva
 
 
@@ -77,7 +77,7 @@ class Assembly:
         self._load_map_stats()
 
     def _load_qc_stats(self):
-        f = fastaq.utils.open_file_read(self.qc_stats_file)
+        f = pyfastaq.utils.open_file_read(self.qc_stats_file)
         for line in f:
             key, value = line.rstrip().split('\t')
             if key.startswith('ref_EMBL'):
@@ -88,10 +88,10 @@ class Assembly:
             elif value.isdigit():
                 self.qc[key] = int(value)
 
-        fastaq.utils.close(f)
+        pyfastaq.utils.close(f)
 
     def _mapstats_to_stats(self, filename):
-        f = fastaq.utils.open_file_read(filename)
+        f = pyfastaq.utils.open_file_read(filename)
         line = f.readline()
         if ' in total ' in line:
             total_reads = int(line.split()[0])
@@ -110,7 +110,7 @@ class Assembly:
             print('line:', line)
             sys.exit(1)
 
-        fastaq.utils.close(f)
+        pyfastaq.utils.close(f)
         return total_reads, mapped_reads
 
     def _load_map_stats(self):
@@ -195,12 +195,12 @@ class Assemblies:
 
 
     def _write_tsv_data_file(self):
-        f = fastaq.utils.open_file_write(self.tsv_data_file)
+        f = pyfastaq.utils.open_file_write(self.tsv_data_file)
         print('ENA_ID', 'Assembler', '\t'.join(qc_stats), sep='\t', file=f)
         for assembly_id in self.assemblies:
             for assembly in self.assemblies[assembly_id]:
                 print(assembly.to_tsv_data_line(), file=f)
-        fastaq.utils.close(f)
+        pyfastaq.utils.close(f)
 
 
     def _get_stats_for_one_assembler(self, assembler, stat):
@@ -308,7 +308,7 @@ class Assemblies:
         self.tex_stats['gage_errors_per_kb_assembled'] = gage_errors_per_kb_assembled
 
     def _write_R_script(self):
-        f = fastaq.utils.open_file_write(self.r_script)
+        f = pyfastaq.utils.open_file_write(self.r_script)
         print('library(ggplot2)',
               'd = read.csv(file="' + self.tsv_data_file + r'''", sep="\t", header=T)''',
               'pre="' + self.outprefix + '."',
@@ -353,7 +353,7 @@ ggplot() + geom_boxplot(data=d, mapping=aes(x=Assembler,y=100*ratt_elements_tran
     theme(axis.title.x = element_blank(), axis.text.x=element_text(angle=90, hjust=1, vjust=0.5))
 ggsave(filename=paste(pre, "suppl.ratt_elements_transferred.pdf", sep=""), scale=0.55)
 ''', sep='\n', file=f)
-        fastaq.utils.close(f)
+        pyfastaq.utils.close(f)
 
     def run(self):
         self._write_tsv_data_file()
@@ -387,7 +387,7 @@ def tex_stat_line_stdev(stat, stat_str, a):
 
 
 def write_tex_table(filename, assemblers, assemblies):
-    f = fastaq.utils.open_file_write(filename)
+    f = pyfastaq.utils.open_file_write(filename)
     print(r'''\begin{tabular}{l|''' + 'r'*len(assemblers) + r'''}\toprule''', file=f)
     print(' & ' + ' & '.join(assemblers) + r''' \\ \midrule''', file=f)
     print(tex_stat_line('good_assemblies', r'''Ideal assemblies (\%)$^1$''', assemblies), file=f)
@@ -399,30 +399,30 @@ def write_tex_table(filename, assemblers, assemblies):
     print(tex_stat_line('gage_total_errors', r'''Total assembly errors$^3$''', assemblies), file=f)
     print(tex_stat_line_stdev('gage_Avg_Idy', r'''Mean per-sample identity to reference (\%)$^4$''', assemblies), r''' \bottomrule''', file=f)
     print(r'''\end{tabular}''', file=f)
-    fastaq.utils.close(f)
+    pyfastaq.utils.close(f)
 
 
 write_tex_table(options.outprefix + '.suppl.table.hiv.tex', assemblers, hiv)
 write_tex_table(options.outprefix + '.suppl.table.flu.tex', assemblers, flu)
 
 all_data_tsv = options.outprefix + '.all.tsv'
-f = fastaq.utils.open_file_read(options.outprefix + '.hiv.tsv')
+f = pyfastaq.utils.open_file_read(options.outprefix + '.hiv.tsv')
 hiv_data = f.readlines()
-fastaq.utils.close(f)
-f = fastaq.utils.open_file_read(options.outprefix + '.flu.tsv')
+pyfastaq.utils.close(f)
+f = pyfastaq.utils.open_file_read(options.outprefix + '.flu.tsv')
 flu_data = f.readlines()
-fastaq.utils.close(f)
+pyfastaq.utils.close(f)
 
-f = fastaq.utils.open_file_write(all_data_tsv)
+f = pyfastaq.utils.open_file_write(all_data_tsv)
 print('Organism', hiv_data[0], sep='\t', end='', file=f)
 for line in hiv_data[1:]:
     print('HIV-1', line, sep='\t', end='', file=f)
 for line in flu_data[1:]:
     print('Influenza', line, sep='\t', end='', file=f)
-fastaq.utils.close(f)
+pyfastaq.utils.close(f)
 
 fig2_r_script = options.outprefix + '.fig2.R'
-f = fastaq.utils.open_file_write(fig2_r_script)
+f = pyfastaq.utils.open_file_write(fig2_r_script)
 
 print('library(ggplot2)',
       'd = read.csv(file="' + all_data_tsv + r'''", sep="\t", header=T)''',
@@ -488,7 +488,7 @@ ggplot(data=d, aes(x=Assembler, y=100 * assembly_sum_longest_match_each_segment 
       sep='\n', file=f)
 
 
-fastaq.utils.close(f)
+pyfastaq.utils.close(f)
 iva.common.syscall('R CMD BATCH ' + fig2_r_script)
 os.unlink('Rplots.pdf')
 os.unlink(options.outprefix + '.flu.suppl.genome_one_unique_contig.pdf')
