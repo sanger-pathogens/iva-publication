@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-import fastaq
+import pyfastaq
 
 parser = argparse.ArgumentParser(
     description = 'Gets N (default 200) reads equally spaced from input fastq file',
@@ -11,12 +11,12 @@ parser.add_argument('outfile', help='Name of output file')
 parser.add_argument('--reads', type=int, help='Number of reads wanted [%(default)s]', default=200, metavar='INT')
 options = parser.parse_args()
 
-wc = int(fastaq.utils.syscall_get_stdout('wc -l ' + options.infile)[0].split()[0])
+wc = int(pyfastaq.utils.syscall_get_stdout('wc -l ' + options.infile)[0].split()[0])
 total_reads = wc / 4
 step = int(total_reads / (options.reads + 2))
-f = fastaq.sequences.file_reader(options.infile)
+f = pyfastaq.sequences.file_reader(options.infile)
 n = 1
-fout = fastaq.utils.open_file_write(options.outfile)
+fout = pyfastaq.utils.open_file_write(options.outfile)
 found = 0
 
 for seq in f:
@@ -27,4 +27,4 @@ for seq in f:
     if found == options.reads:
         break
 
-fastaq.utils.close(fout)
+pyfastaq.utils.close(fout)

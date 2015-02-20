@@ -3,11 +3,10 @@ IVA Publication
 
 This repository contains all supplementary data, scripts and
 intermediate data necessary to reproduce the results of
-the IVA manuscript (submitted).
+the IVA manuscript (accepted for publication).
 
 For all of the scripts in this repository to work, you will
-need IVA (and its dependencies) installed, and also
-the Python package [Fastaq] [fastaq] installed.
+need IVA (and its dependencies) installed.
 This README
 assumes that the reader has read the publication and supplementary
 material.
@@ -80,5 +79,3 @@ box plots of wall clock and total CPU time, then makes the plots.
 
 The usage of the remaining scripts is described in the supplementary material.
 
-
-  [fastaq]: https://github.com/sanger-pathogens/Fastaq
